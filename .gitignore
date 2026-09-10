@@ -1,0 +1,8 @@
+*.pyc
+*.DS_Store
+./sha256
+./sha256.pub
+.venv/
+.hf_cache/
+__pycache__/
+checkpoints/

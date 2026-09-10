@@ -1,0 +1,62 @@
+[
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_102_0512_0000.png",
+        "target_text": "building",
+        "expected_bboxes": [
+            [
+                10,
+                10,
+                50,
+                50
+            ]
+        ]
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_113_0256.png",
+        "target_text": "building",
+        "expected_bboxes": [
+            [
+                10,
+                10,
+                50,
+                50
+            ]
+        ]
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_121_0768_0256.png",
+        "target_text": "building",
+        "expected_bboxes": [
+            [
+                10,
+                10,
+                50,
+                50
+            ]
+        ]
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_2_0000_0000.png",
+        "target_text": "building",
+        "expected_bboxes": [
+            [
+                10,
+                10,
+                50,
+                50
+            ]
+        ]
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_2_0000_0512.png",
+        "target_text": "building",
+        "expected_bboxes": [
+            [
+                10,
+                10,
+                50,
+                50
+            ]
+        ]
+    }
+]

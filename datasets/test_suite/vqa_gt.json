@@ -1,0 +1,52 @@
+[
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_102_0512_0000.png",
+        "question": "Is there a building present?",
+        "expected_answer": "yes"
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_102_0512_0000.png",
+        "question": "Are there any airplanes?",
+        "expected_answer": "no"
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_113_0256.png",
+        "question": "Is there a building present?",
+        "expected_answer": "yes"
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_113_0256.png",
+        "question": "Are there any airplanes?",
+        "expected_answer": "no"
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_121_0768_0256.png",
+        "question": "Is there a building present?",
+        "expected_answer": "yes"
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_121_0768_0256.png",
+        "question": "Are there any airplanes?",
+        "expected_answer": "no"
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_2_0000_0000.png",
+        "question": "Is there a building present?",
+        "expected_answer": "yes"
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_2_0000_0000.png",
+        "question": "Are there any airplanes?",
+        "expected_answer": "no"
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_2_0000_0512.png",
+        "question": "Is there a building present?",
+        "expected_answer": "yes"
+    },
+    {
+        "image_path": "d:\\ChangeFormer\\samples_LEVIR\\A\\test_2_0000_0512.png",
+        "question": "Are there any airplanes?",
+        "expected_answer": "no"
+    }
+]
