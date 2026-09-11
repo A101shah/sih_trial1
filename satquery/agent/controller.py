@@ -102,8 +102,14 @@ class AgentController:
         elif determined_task in ["grounding", "spatial_grounding"]:
             return self._handle_grounding(image_1, question, state, geo_meta_1, plan_info)
 
+        elif determined_task == "captioning":
+            caption_prompt = question if question else "Describe this remote sensing scene in detail."
+            if "describe" not in caption_prompt.lower():
+                caption_prompt = "Describe this remote sensing scene in detail. " + caption_prompt
+            return self._handle_vqa(image_1, caption_prompt, state, geo_meta_1, plan_info)
+
         else:  # vqa / scene understanding
-            return self._handle_vqa(image_1, question or "What is present in this remote sensing scene?", state, geo_meta_1, plan_info)
+            return self._handle_vqa(image_1, question or "What is the primary land cover in this image?", state, geo_meta_1, plan_info)
 
     def _handle_change_analysis(
         self,
