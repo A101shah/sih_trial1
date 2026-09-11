@@ -188,8 +188,23 @@ def run_training_pipeline(
     print("==================================================")
 
     # Prepare sample dataset
-    train_samples = [{"id": i, "label_id": i % 23} for i in range(40)]
-    val_samples = [{"id": i, "label_id": i % 23} for i in range(16)]
+    vqa_file = os.path.join("datasets", "test_suite", "vqa_gt.json")
+    with open(vqa_file, "r") as f:
+        vqa_data = json.load(f)
+        
+    samples = []
+    for i, item in enumerate(vqa_data):
+        if item["question"] != "Is there a building present?":
+            continue
+        label = 1 if item["expected_answer"] == "yes" else 0
+        samples.append({
+            "id": i,
+            "image_path": item["image_path"],
+            "label_id": label
+        })
+        
+    train_samples = samples[:4]
+    val_samples = samples[4:]
 
     train_ds = RemoteSensingVLMDataset(train_samples)
     val_ds = RemoteSensingVLMDataset(val_samples)
@@ -197,7 +212,7 @@ def run_training_pipeline(
     train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False)
 
-    tuner = LoRAFineTuner(num_classes=23)
+    tuner = LoRAFineTuner(num_classes=2)
     history = []
 
     for epoch in range(1, epochs + 1):
@@ -224,4 +239,4 @@ def run_training_pipeline(
 
 
 if __name__ == "__main__":
-    run_training_pipeline(epochs=2, batch_size=4)
+    run_training_pipeline(epochs=20, batch_size=4)

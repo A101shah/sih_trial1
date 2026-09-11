@@ -28,6 +28,38 @@ class RemoteSensingVQA:
         
         self.model.to(self.device)
         self.model.eval()
+        
+        # Load Custom LoRA Adapter for Remote Sensing specific presence classification
+        self.use_custom_lora = False
+        self.lora_model = None
+        lora_ckpt = "checkpoints/lora_rsvqa/lora_rs_adapter.pt"
+        if os.path.exists(lora_ckpt):
+            try:
+                import torchvision.models as tv_models
+                import torchvision.transforms as T
+                import torch.nn as nn
+                from peft import get_peft_model, LoraConfig
+                
+                base_model = tv_models.resnet50(weights=None)
+                base_model.fc = nn.Linear(base_model.fc.in_features, 2)
+                
+                peft_config = LoraConfig(r=8, lora_alpha=16, target_modules=["fc"], lora_dropout=0.05, bias="none")
+                self.lora_model = get_peft_model(base_model, peft_config)
+                
+                ckpt = torch.load(lora_ckpt, map_location=self.device)
+                self.lora_model.load_state_dict(ckpt["state_dict"])
+                self.lora_model.to(self.device)
+                self.lora_model.eval()
+                
+                self.lora_transform = T.Compose([
+                    T.Resize((256, 256)),
+                    T.ToTensor(),
+                    T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                ])
+                self.use_custom_lora = True
+                print("Loaded custom RS-VQA LoRA adapter successfully!")
+            except Exception as e:
+                print(f"Could not load custom LoRA adapter: {e}")
 
     def _preprocess_image(self, image_input: Union[str, np.ndarray, Image.Image]) -> Image.Image:
         if isinstance(image_input, str):
@@ -80,7 +112,37 @@ class RemoteSensingVQA:
                 count = 1
         elif any(k in q_lower for k in ["is there", "are there", "does this contain", "do you see", "present"]):
             task = "presence_vqa"
-            is_present = answer.lower() in ["yes", "true", "1"]
+            
+            if self.use_custom_lora:
+                # Use our fine-tuned custom adapter!
+                try:
+                    tensor = self.lora_transform(img).unsqueeze(0).to(self.device)
+                    with torch.no_grad():
+                        l_out = self.lora_model(tensor)
+                        l_probs = torch.softmax(l_out, dim=1)
+                        l_pred = torch.argmax(l_probs, dim=1).item()
+                        
+                    is_present = (l_pred == 1)
+                    answer = "yes" if is_present else "no"
+                    confidence = l_probs[0, l_pred].item()
+                except Exception as e:
+                    print(f"Error running LoRA adapter: {e}")
+                    is_present = answer.lower() in ["yes", "true", "1"]
+            else:
+                # Principled Zero-Shot approach: Compare 'yes' and 'no' logits directly
+                yes_id = self.model.config.label2id.get("yes")
+                no_id = self.model.config.label2id.get("no")
+                if yes_id is not None and no_id is not None:
+                    if logits[0, yes_id] > logits[0, no_id]:
+                        is_present = True
+                        answer = "yes"
+                        confidence = probs[0, yes_id].item()
+                    else:
+                        is_present = False
+                        answer = "no"
+                        confidence = probs[0, no_id].item()
+                else:
+                    is_present = answer.lower() in ["yes", "true", "1"]
 
         # Ensure we return top predictions to fit original response schema
         top_k = min(5, logits.shape[-1])

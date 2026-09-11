@@ -31,11 +31,11 @@ def main():
     try:
         import uvicorn
         from satquery.server.fastapi_app import app
-        uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+        uvicorn.run(app, host="localhost", port=port, log_level="info")
     except Exception as e:
         print(f"Uvicorn fallback due to: {e}. Starting standard multi-threaded HTTP server...")
         from satquery.server.app import run_server
-        run_server(host="0.0.0.0", port=port)
+        run_server(host="localhost", port=port)
 
 
 if __name__ == "__main__":

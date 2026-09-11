@@ -52,7 +52,7 @@ class TextGroundingEngine:
         self,
         image_input: Union[str, np.ndarray, Image.Image],
         target_text: str = "built-up structures",
-        threshold: float = 0.1
+        threshold: float = 0.01
     ) -> Dict[str, Any]:
         """
         Locates target regions from the prompt text, generating bounding boxes and overlay visuals.
